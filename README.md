@@ -1,6 +1,6 @@
 # Projectrial: A project by the students of GHRCEM.
-# Welcome to **KINETIX** ♥︎
-# Define Your Role
+## Welcome to **KINETIX** ♥︎
+## Define Your Role
 
 ---
 
