@@ -4,7 +4,7 @@
 
 ---
 
-# 🎨 FRONTEND
+# FRONTEND
 
 # 1. UI/UX DESIGNER — **Anuj**
 
@@ -77,7 +77,7 @@
 
 ---
 
-# 5. BACKEND DEVELOPER 2 — **Abhinav C**
+### 5. BACKEND DEVELOPER 2 — **Abhinav C**
 
 - **File handling** → Read/write images  
 - **Projection logic** → Main try-on code  
