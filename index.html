@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Projectrial </title>
+<title>VIRTUFIT | AI virtual clothing try on</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ---------- 1. YOUR COLORS ---------- */
+/* ---------- 1. YOUR NEW COLORS ---------- */
 :root{
-  --batter:#E8D1A7;   /* Golden Batter */
-  --olive:#9D9167;    /* Olive Harvest */
-  --caramel:#84592B;  /* Toasted Caramel */
-  --wine:#743014;     /* Spiced Wine */
-  --cocoa:#442D1C;    /* Cowhide Cocoa */
+  --cloud:#B1C7D4;     /* Cloudy Valley */
+  --tsunami:#849AAD;   /* Tsunami */
+  --weather:#A1947F;   /* Weather Board */
+  --volcanic:#605246;  /* Volcanic Island */
+  --oxide:#5E1C23;     /* Red Oxide */
+  --paper:#EAF0F4;     /* light text on dark sections (a light tint of Cloudy Valley) */
   --serif:"Instrument Serif",Georgia,serif;
   --ease:cubic-bezier(0.22,1,0.36,1);
 }
@@ -21,53 +22,58 @@
 /* ---------- 2. BASIC PAGE ---------- */
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{background:var(--batter);color:var(--cocoa);font-family:"Manrope",sans-serif;font-size:16px;line-height:24px;overflow-x:hidden}
-h1,h2,h3{font-family:var(--serif);font-weight:400}
+body{background:var(--cloud);color:var(--oxide);font-family:"Manrope",sans-serif;font-size:16px;line-height:24px;overflow-x:hidden}
+h1,h2{font-family:var(--serif);font-weight:400}
 h1{font-size:clamp(44px,7vw,64px);line-height:1}
 h2{font-size:clamp(34px,5vw,44px);line-height:1.1}
 h3{font-family:"Manrope",sans-serif;font-weight:600;font-size:18px}
 a{color:inherit}
+:focus-visible{outline:2px solid var(--oxide);outline-offset:2px}
+.dark :focus-visible{outline-color:var(--paper)}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 section{padding:88px 0}
-.muted{opacity:.8}
+.muted{opacity:.85}
 
 /* Color bands: each section uses one of your colors */
-.olive{background:var(--olive)}
-.caramel{background:var(--caramel)}
-.wine{background:var(--wine)}
-.cocoa{background:var(--cocoa)}
-.dark{color:var(--batter)}
+.cloud{background:var(--cloud)}
+.tsunami{background:var(--tsunami)}
+.weather{background:var(--weather)}
+.volcanic{background:var(--volcanic)}
+.oxide{background:var(--oxide)}
+.dark{color:var(--paper)}
 
 /* ---------- 3. GLASS (Apple style, see through) ---------- */
 .glass{
-  background:rgba(232,209,167,.35);
+  background:rgba(234,240,244,.35);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border:1px solid rgba(255,255,255,.5);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 32px rgba(68,45,28,.15);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 32px rgba(94,28,35,.12);
 }
-.dark .glass{background:rgba(232,209,167,.12);border-color:rgba(232,209,167,.3)}
+.dark .glass{background:rgba(234,240,244,.12);border-color:rgba(234,240,244,.3)}
 
 /* Soft colored blobs that float behind the glass */
 .blobs{position:fixed;inset:0;z-index:-1;overflow:hidden}
 .blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.6;animation:float 24s var(--ease) infinite alternate}
-.b1{width:460px;height:460px;background:var(--olive);top:-80px;left:-100px}
-.b2{width:540px;height:540px;background:var(--caramel);top:30%;right:-180px;animation-duration:30s}
-.b3{width:400px;height:400px;background:var(--wine);bottom:-100px;left:25%;animation-duration:36s}
+.b1{width:460px;height:460px;background:var(--tsunami);top:-80px;left:-100px}
+.b2{width:540px;height:540px;background:var(--weather);top:30%;right:-180px;animation-duration:30s}
+.b3{width:400px;height:400px;background:var(--oxide);bottom:-100px;left:25%;opacity:.45;animation-duration:36s}
 @keyframes float{to{transform:translate(140px,100px)}}
 
 /* ---------- 4. BUTTONS ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;border:1px solid transparent;font:600 16px "Manrope",sans-serif;cursor:pointer;text-decoration:none;background:var(--wine);color:var(--batter);transition:transform .3s var(--ease),background .3s}
-.btn:hover{transform:translateY(-2px);background:var(--cocoa)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;border:1px solid transparent;font:600 16px "Manrope",sans-serif;cursor:pointer;text-decoration:none;background:var(--oxide);color:var(--paper);transition:transform .3s var(--ease),background .3s}
+.btn:hover{transform:translateY(-2px);background:var(--volcanic)}
 .btn:active{transform:scale(.98)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn.ghost{background:transparent;color:inherit;border-color:currentColor}
-.dark .btn{background:var(--batter);color:var(--cocoa)}
-.dark .btn.ghost{background:transparent;color:var(--batter)}
+.btn.ghost:hover{background:rgba(234,240,244,.2)}
+.dark .btn{background:var(--paper);color:var(--oxide)}
+.dark .btn:hover{background:#fff}
+.dark .btn.ghost{background:transparent;color:var(--paper)}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 
 /* ---------- 5. TOP MENU ---------- */
-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:20px;align-items:center;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(232,209,167,.85)}
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:20px;align-items:center;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(177,199,212,.88)}
 nav b{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.08em}
 nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 @media(max-width:700px){nav .link{display:none}}
@@ -76,24 +82,33 @@ nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 .hero{min-height:100vh;padding-top:120px;display:grid;gap:32px;align-items:center}
 @media(min-width:900px){.hero{grid-template-columns:1fr 1fr;gap:64px}}
 .hero p{max-width:520px;margin:20px 0 24px}
-.pill{display:inline-block;background:var(--wine);color:var(--batter);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
+.pill{display:inline-block;background:var(--oxide);color:var(--paper);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
 
 /* The model stands inside a colored arch */
 .stage{position:relative;max-width:420px;width:100%;margin:0 auto;aspect-ratio:4/5}
 .arch{position:absolute;bottom:0;border-radius:999px 999px 24px 24px}
 .arch.back1{left:0;width:48%;height:74%}
 .arch.back2{right:0;width:44%;height:62%}
-.arch.main{left:15%;width:70%;height:92%;background:var(--wine);transition:background .7s var(--ease)}
+.arch.main{left:15%;width:70%;height:92%;background:var(--oxide);transition:background .7s var(--ease)}
 .stage img{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:76%}
 
 /* Moving scan line over the arch */
 .scan{position:absolute;left:15%;width:70%;height:92%;bottom:0;overflow:hidden;border-radius:999px 999px 24px 24px;pointer-events:none}
-.scan i{position:absolute;inset:0;background:rgba(232,209,167,.15);border-bottom:2px solid var(--batter);animation:scan 4s var(--ease) infinite}
+.scan i{position:absolute;inset:0;background:rgba(234,240,244,.15);border-bottom:2px solid var(--paper);animation:scan 4s var(--ease) infinite}
 @keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+
+/* Floating labels that explain the art */
+.tag{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;font-size:12px;font-weight:600;animation:bob 5s var(--ease) infinite alternate}
+.tag svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tag.t1{top:6%;left:-4%}
+.tag.t2{top:42%;right:-6%;animation-delay:.8s}
+.tag.t3{bottom:10%;left:-6%;animation-delay:1.6s}
+@keyframes bob{to{transform:translateY(-10px)}}
+@media(max-width:520px){.tag.t1{left:0}.tag.t2{right:0}.tag.t3{left:0}}
 
 /* Five color tiles (click to change the arch color) */
 .tiles{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.tile{height:80px;border-radius:16px;border:1px solid rgba(255,255,255,.5);cursor:pointer;font:400 18px var(--serif);padding:8px;display:flex;align-items:flex-end;transition:transform .4s var(--ease)}
+.tile{height:80px;border-radius:16px;border:1px solid rgba(255,255,255,.55);cursor:pointer;font:400 18px var(--serif);padding:8px;display:flex;align-items:flex-end;text-align:left;transition:transform .4s var(--ease)}
 .tile:hover{transform:translateY(-4px)}
 @media(max-width:700px){.tile span{display:none}}
 
@@ -108,31 +123,26 @@ nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 @media(min-width:900px){.tryon{grid-template-columns:1fr 1fr;gap:48px}}
 .left{display:flex;flex-direction:column;gap:16px}
 .slot{display:flex;gap:16px;padding:20px;border-radius:24px}
-.thumb{flex:none;width:96px;height:128px;border-radius:16px;border:1px dashed rgba(232,209,167,.6);display:grid;place-items:center;overflow:hidden;font-size:12px}
+.thumb{flex:none;width:96px;height:128px;border-radius:16px;border:1px dashed rgba(234,240,244,.6);display:grid;place-items:center;overflow:hidden;font-size:12px}
 .thumb img{width:100%;height:100%;object-fit:cover}
 .slot .row{margin:8px 0}
 .msg{font-size:14px;min-height:20px}
 .result{padding:16px;border-radius:24px;display:flex;flex-direction:column;gap:16px}
-.canvaswrap{border-radius:16px;overflow:hidden;background:rgba(232,209,167,.1);min-height:300px;display:grid;place-items:center;text-align:center}
+.canvaswrap{border-radius:16px;overflow:hidden;background:rgba(234,240,244,.1);min-height:300px;display:grid;place-items:center;text-align:center}
 canvas{width:100%;height:auto;display:none}
 .sliders label{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:14px;margin-bottom:6px}
 .check{display:flex;gap:8px;font-size:14px}
-input[type=range]{width:100%;accent-color:var(--batter)}
+input[type=range]{width:100%;accent-color:var(--paper)}
 
-/* ---------- 9. CARDS ---------- */
+/* ---------- 9. CARDS WITH ART ---------- */
 .grid{display:grid;gap:16px;margin-top:40px}
 @media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
 .card{padding:24px;border-radius:24px}
 .card h3{margin-bottom:8px}
+.art{width:100%;height:96px;border-radius:16px;display:grid;place-items:center;margin-bottom:16px;background:rgba(234,240,244,.25);border:1px solid rgba(255,255,255,.4)}
+.dark .art{background:rgba(234,240,244,.1);border-color:rgba(234,240,244,.25)}
+.art svg{width:120px;height:80px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;animation:bob 4s var(--ease) infinite alternate}
 
-/* ---------- 10. QUESTIONS ---------- */
-details{padding:16px 24px;border-radius:16px;margin-bottom:12px}
-summary{cursor:pointer;font-weight:600}
-details p{margin-top:8px}
-
-/* ---------- 11. WAITLIST ---------- */
-form{display:flex;flex-wrap:wrap;gap:8px;max-width:440px;margin-top:24px}
-input[type=email]{flex:1;min-width:200px;padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.6);font:16px "Manrope",sans-serif}
 footer{padding:32px 0;font-size:14px}
 
 /* Fade in when scrolling */
@@ -150,11 +160,10 @@ footer{padding:32px 0;font-size:14px}
 <!-- MENU -->
 <nav class="glass">
   <b>VIRTUFIT</b>
-  <a class="link" href="#tryon">Try it on</a>
   <a class="link" href="#benefits">Benefits</a>
   <a class="link" href="#how">How it works</a>
-  <a class="link" href="#faq">FAQ</a>
-  <a class="btn" href="#waitlist" style="padding:8px 14px;font-size:14px">Join the waitlist</a>
+  <a class="link" href="#next">What's next</a>
+  <a class="btn" href="#tryon" style="padding:8px 14px;font-size:14px">Try it on</a>
 </nav>
 
 <!-- HERO -->
@@ -173,6 +182,11 @@ footer{padding:32px 0;font-size:14px}
       <div class="arch main" id="arch"></div>
       <img src="model.png" alt="Model wearing a cream shirt and wide leg trousers">
       <div class="scan"><i></i></div>
+
+      <!-- floating labels -->
+      <div class="tag t1 glass"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M7.5 17c.7-3 2.5-4 4.5-4s3.800 1 4.500 4"/></svg>Your photo</div>
+      <div class="tag t2 glass"><svg viewBox="0 0 24 24"><path d="M7 5l5-2 5 2 4 5-3.500 1.500V21H6.500v-9.500L3 10z"/></svg>Clothing photo</div>
+      <div class="tag t3 glass"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg>Try on preview</div>
     </div>
 
     <div class="tiles" id="tiles"></div>
@@ -180,12 +194,12 @@ footer{padding:32px 0;font-size:14px}
 </div>
 
 <!-- TAGLINE -->
-<section class="tagline cocoa dark">
+<section class="tagline oxide dark">
   <div class="wrap"><h2 id="tag">Clothes should be judged on you, not on a model in a catalog photo.</h2></div>
 </section>
 
 <!-- TRY ON -->
-<section id="tryon" class="wine dark">
+<section id="tryon" class="volcanic dark">
   <div class="wrap">
     <h2>Try on an outfit in three steps</h2>
     <p class="muted" style="margin:12px 0 40px">Add your photo, add the clothing, and get a preview you can save.</p>
@@ -253,27 +267,51 @@ footer{padding:32px 0;font-size:14px}
 </section>
 
 <!-- BENEFITS -->
-<section id="benefits" class="olive">
+<section id="benefits" class="tsunami">
   <div class="wrap">
     <h2>Know how it looks before you buy</h2>
     <div class="grid">
-      <div class="card glass fade"><h3>See clothes on your own photo</h3><p>Skip the catalog model. The outfit is placed on a photo of you.</p></div>
-      <div class="card glass fade"><h3>A clear preview</h3><p>Check color, cut and proportions before you spend anything.</p></div>
-      <div class="card glass fade"><h3>Try as many outfits as you like</h3><p>Swap the clothing photo and make a new preview.</p></div>
-      <div class="card glass fade"><h3>Privacy first</h3><p>Your photos stay on your device. Nothing is uploaded.</p></div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><rect x="30" y="8" width="60" height="64" rx="8"/><circle cx="60" cy="30" r="9"/><path d="M42 62c2-14 10-20 18-20s16 6 18 20"/></svg></div>
+        <h3>See clothes on your own photo</h3><p>Skip the catalog model. The outfit is placed on a photo of you.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M16 40c12-20 28-28 44-28s32 8 44 28c-12 20-28 28-44 28S28 60 16 40z"/><circle cx="60" cy="40" r="12"/></svg></div>
+        <h3>A clear preview</h3><p>Check color, cut and proportions before you spend anything.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><rect x="20" y="14" width="40" height="52" rx="6"/><rect x="40" y="10" width="40" height="52" rx="6"/><rect x="60" y="14" width="40" height="52" rx="6"/></svg></div>
+        <h3>Try as many outfits as you like</h3><p>Swap the clothing photo and make a new preview.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><rect x="38" y="34" width="44" height="34" rx="6"/><path d="M46 34v-8a14 14 0 0 1 28 0v8"/><circle cx="60" cy="50" r="4"/></svg></div>
+        <h3>Privacy first</h3><p>Your photos stay on your device. Nothing is uploaded.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how" class="caramel dark">
+<section id="how" class="weather">
   <div class="wrap">
     <h2>How VIRTUFIT works</h2>
     <div class="grid">
-      <div class="card glass fade"><h3>1. Upload your photo</h3><p>Choose a clear photo of yourself.</p></div>
-      <div class="card glass fade"><h3>2. Upload the clothing</h3><p>Add a photo of the outfit you want to try.</p></div>
-      <div class="card glass fade"><h3>3. Generate the projection</h3><p>The clothing is fitted onto your photo.</p></div>
-      <div class="card glass fade"><h3>4. View and save</h3><p>Adjust the fit, then download the image.</p></div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><rect x="30" y="8" width="60" height="64" rx="8"/><circle cx="60" cy="30" r="9"/><path d="M42 62c2-14 10-20 18-20s16 6 18 20"/><path d="M106 60V26M98 34l8-8 8 8"/></svg></div>
+        <h3>1. Upload your photo</h3><p>Choose a clear photo of yourself.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M38 24l16-8c2 6 8 8 12 8s10-2 12-8l16 8 10 18-14 6-6-8v30H48V40l-6 8-14-6z"/></svg></div>
+        <h3>2. Upload the clothing</h3><p>Add a photo of the outfit you want to try.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><circle cx="50" cy="20" r="9"/><path d="M30 72c0-20 8-30 20-30s20 10 20 30z"/><path d="M36 50l14-6 14 6" stroke-dasharray="4 4"/><path d="M96 10v24M84 22h24M88 14l16 16M104 14L88 30"/></svg></div>
+        <h3>3. Generate the projection</h3><p>The clothing is fitted onto your photo.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><rect x="24" y="6" width="72" height="50" rx="8"/><circle cx="44" cy="22" r="6"/><path d="M28 52l20-16 14 10 12-8 16 14"/><path d="M60 62v12M54 68l6 6 6-6"/></svg></div>
+        <h3>4. View and save</h3><p>Adjust the fit, then download the image.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -283,35 +321,23 @@ footer{padding:32px 0;font-size:14px}
   <div class="wrap">
     <h2>What is coming next</h2>
     <div class="grid">
-      <div class="card glass fade"><h3>Outfit recommendations</h3><p>Suggestions tuned to your style.</p></div>
-      <div class="card glass fade"><h3>Multiple combinations</h3><p>Try a top, trousers and jacket together.</p></div>
-      <div class="card glass fade"><h3>Automatic clothing detection</h3><p>VIRTUFIT finds the garment on its own.</p></div>
-      <div class="card glass fade"><h3>Styling suggestions</h3><p>Ideas for what to pair with your choice.</p></div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M60 8l8 24 24 8-24 8-8 24-8-24-24-8 24-8z"/></svg></div>
+        <h3>Outfit recommendations</h3><p>Suggestions tuned to your style.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M34 12l12-4 8 6 8-6 12 4 8 14-10 4v14H36V30l-10-4z"/><path d="M40 52h40l4 24H36z"/></svg></div>
+        <h3>Multiple combinations</h3><p>Try a top, trousers and jacket together.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M24 28V14h14M96 28V14H82M24 52v14h14M96 52v14H82"/><circle cx="60" cy="40" r="10"/></svg></div>
+        <h3>Automatic clothing detection</h3><p>VIRTUFIT finds the garment on its own.</p>
+      </div>
+      <div class="card glass fade">
+        <div class="art"><svg viewBox="0 0 120 80"><path d="M60 14a8 8 0 1 1 8 8c-4 0-8 2-8 6v4L22 58c-4 3-2 8 3 8h70c5 0 7-5 3-8L60 32"/></svg></div>
+        <h3>Styling suggestions</h3><p>Ideas for what to pair with your choice.</p>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- QUESTIONS -->
-<section id="faq" class="olive">
-  <div class="wrap" style="max-width:760px">
-    <h2 style="margin-bottom:32px">Questions people ask first</h2>
-    <details class="glass"><summary>How does the try on work?</summary><p>You upload your photo and a clothing photo. VIRTUFIT places the clothing on your photo and shows a preview.</p></details>
-    <details class="glass"><summary>Is this a full AI try on?</summary><p>Not yet. This version overlays the clothing flat. A full AI model can be connected later.</p></details>
-    <details class="glass"><summary>Are my photos stored?</summary><p>No. Everything happens in your browser and nothing is uploaded.</p></details>
-    <details class="glass"><summary>Can I save the result?</summary><p>Yes. Press Download image after you generate a preview.</p></details>
-  </div>
-</section>
-
-<!-- WAITLIST -->
-<section id="waitlist" class="cocoa dark">
-  <div class="wrap" style="text-align:center">
-    <h2>Be first to try it on</h2>
-    <p class="muted" style="margin-top:12px">Join the waitlist. It is free and you can leave any time.</p>
-    <form id="form" style="margin:24px auto 0" novalidate>
-      <input type="email" id="email" placeholder="you@example.com" aria-label="Email address">
-      <button class="btn" type="submit">Join the waitlist</button>
-      <p class="msg" id="formmsg" style="width:100%;text-align:left"></p>
-    </form>
   </div>
 </section>
 
@@ -320,13 +346,13 @@ footer{padding:32px 0;font-size:14px}
 
 <script>
 /* ============ A. HERO COLOR TILES ============ */
-// Each color: name, hex, text color
+// name, color, text color on the tile
 var colors=[
-  ["Golden batter","#E8D1A7","#442D1C"],
-  ["Olive harvest","#9D9167","#442D1C"],
-  ["Toasted caramel","#84592B","#E8D1A7"],
-  ["Spiced wine","#743014","#E8D1A7"],
-  ["Cowhide cocoa","#442D1C","#E8D1A7"]
+  ["Cloudy Valley","#B1C7D4","#5E1C23"],
+  ["Tsunami","#849AAD","#5E1C23"],
+  ["Weather Board","#A1947F","#5E1C23"],
+  ["Volcanic Island","#605246","#EAF0F4"],
+  ["Red Oxide","#5E1C23","#EAF0F4"]
 ];
 var tiles=document.getElementById("tiles"), arch=document.getElementById("arch");
 colors.forEach(function(c,i){
@@ -336,9 +362,9 @@ colors.forEach(function(c,i){
   b.onclick=function(){ clearInterval(timer); setColor(i); };
   tiles.appendChild(b);
 });
-function setColor(i){ arch.style.background=colors[(i+2)%5][1]; }   // arch color changes
-var n=0, timer=setInterval(function(){ n=(n+1)%5; setColor(n); },3500); // auto change
-setColor(0);
+function setColor(i){ arch.style.background=colors[(i+3)%5][1]; }   // arch color changes
+var n=1, timer=setInterval(function(){ n=(n+1)%5; setColor(n); },3500); // auto change
+setColor(1);
 
 /* ============ B. TAGLINE WORDS LIGHT UP ============ */
 var tag=document.getElementById("tag");
@@ -355,8 +381,8 @@ var fadeObs=new IntersectionObserver(function(list){
 document.querySelectorAll(".fade").forEach(function(f){ fadeObs.observe(f); });
 
 /* ============ D. TRY ON ============ */
-var userPhoto=null, clothPhoto=null;      // the two images (as canvases)
-var ready=false;                          // true after a result is drawn
+var userPhoto=null, clothPhoto=null;   // the two images (as canvases)
+var ready=false;                       // true after a result is drawn
 
 var out=document.getElementById("out"), ctx=out.getContext("2d");
 var gen=document.getElementById("gen"), statusEl=document.getElementById("status");
@@ -433,7 +459,7 @@ function setupSlot(slot,which){
       var m=new Image();
       m.onload=function(){
         c.width=560; c.height=840;
-        x.fillStyle="#E8D1A7"; x.fillRect(0,0,560,840);
+        x.fillStyle="#B1C7D4"; x.fillRect(0,0,560,840);
         x.drawImage(m,0,0,560,840);
         userPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample photo loaded.";
         resetResult(); refresh();
@@ -444,9 +470,9 @@ function setupSlot(slot,which){
       c.width=c.height=400;
       x.fillStyle="#fff"; x.fillRect(0,0,400,400);
       var shirt=new Path2D("M110 70L160 50Q200 80 240 50L290 70L350 140L305 170L280 140L280 340L120 340L120 140L95 170L50 140Z");
-      x.fillStyle="#743014"; x.fill(shirt);
+      x.fillStyle="#5E1C23"; x.fill(shirt);
       x.save(); x.clip(shirt);
-      x.fillStyle="rgba(232,209,167,.9)";
+      x.fillStyle="rgba(177,199,212,.9)";
       for(var i=0;i<400;i+=28) x.fillRect(i,0,6,400);
       x.restore();
       clothPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample clothing loaded.";
@@ -466,13 +492,11 @@ function removeBackground(src){
   var data=x.getImageData(0,0,w,h), a=data.data;
   var seen=new Uint8Array(w*h);
 
-  // corner color
-  var ref=[a[0],a[1],a[2]];
+  var ref=[a[0],a[1],a[2]];   // corner color
   function similar(i){
     return Math.abs(a[i*4]-ref[0])<=34 && Math.abs(a[i*4+1]-ref[1])<=34 && Math.abs(a[i*4+2]-ref[2])<=34;
   }
 
-  // walk in from all four edges
   var stack=[], i, X, Y;
   for(X=0;X<w;X++){ stack.push(X, (h-1)*w+X); }
   for(Y=0;Y<h;Y++){ stack.push(Y*w, Y*w+w-1); }
@@ -510,7 +534,6 @@ function drawResult(){
   ctx.clearRect(0,0,W,H);
   ctx.drawImage(userPhoto,0,0);
 
-  // the clothing (with or without its background)
   var src=clothPhoto, box={x:0,y:0,w:clothPhoto.width,h:clothPhoto.height};
   if(rmbg.checked){ var r=removeBackground(clothPhoto); src=r.canvas; box=r.box; }
 
@@ -573,7 +596,8 @@ document.getElementById("startover").onclick=function(){
   size.value=100; movex.value=0; movey.value=0;
   resetResult(); refresh();
 };
-};
+
+refresh();
 </script>
 </body>
 </html>
