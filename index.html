@@ -7,14 +7,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ---------- 1. YOUR NEW COLORS ---------- */
+/* ---------- 1. COLORS ----------
+   c1 = lightest ... c5 = darkest.
+   These are the default (Forest Linen). The theme buttons change them with JavaScript. */
 :root{
-  --cloud:#B1C7D4;     /* Cloudy Valley */
-  --tsunami:#849AAD;   /* Tsunami */
-  --weather:#A1947F;   /* Weather Board */
-  --volcanic:#605246;  /* Volcanic Island */
-  --oxide:#5E1C23;     /* Red Oxide */
-  --paper:#EAF0F4;     /* light text on dark sections (a light tint of Cloudy Valley) */
+  --c1:#EFE8DA; --c2:#B7C4AA; --c3:#8C9E7E; --c4:#3F5646; --c5:#243A2E;
+  --ink:#243A2E;          /* text color on light areas */
+  --paper:#EFE8DA;        /* text color on dark areas */
+  --prgb:239,232,218;     /* paper as numbers (for glass) */
+  --irgb:36,58,46;        /* ink as numbers (for shadows) */
+  --c1rgb:239,232,218;    /* c1 as numbers (for the menu) */
   --serif:"Instrument Serif",Georgia,serif;
   --ease:cubic-bezier(0.22,1,0.36,1);
 }
@@ -22,58 +24,59 @@
 /* ---------- 2. BASIC PAGE ---------- */
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{background:var(--cloud);color:var(--oxide);font-family:"Manrope",sans-serif;font-size:16px;line-height:24px;overflow-x:hidden}
+body{background:var(--c1);color:var(--ink);font-family:"Manrope",sans-serif;font-size:16px;line-height:24px;overflow-x:hidden;transition:background-color .5s,color .5s}
 h1,h2{font-family:var(--serif);font-weight:400}
 h1{font-size:clamp(44px,7vw,64px);line-height:1}
 h2{font-size:clamp(34px,5vw,44px);line-height:1.1}
 h3{font-family:"Manrope",sans-serif;font-weight:600;font-size:18px}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--oxide);outline-offset:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .dark :focus-visible{outline-color:var(--paper)}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 section{padding:88px 0}
 .muted{opacity:.85}
 
-/* Color bands: each section uses one of your colors */
-.cloud{background:var(--cloud)}
-.tsunami{background:var(--tsunami)}
-.weather{background:var(--weather)}
-.volcanic{background:var(--volcanic)}
-.oxide{background:var(--oxide)}
+/* Color bands. JavaScript adds "dark" when the band is dark, so text turns light. */
+.band{transition:background-color .5s,color .5s}
+.bg1{background:var(--c1)}
+.bg2{background:var(--c2)}
+.bg3{background:var(--c3)}
+.bg4{background:var(--c4)}
+.bg5{background:var(--c5)}
 .dark{color:var(--paper)}
 
 /* ---------- 3. GLASS (Apple style, see through) ---------- */
 .glass{
-  background:rgba(234,240,244,.35);
+  background:rgba(var(--prgb),.35);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
   border:1px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 32px rgba(94,28,35,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 32px rgba(var(--irgb),.12);
 }
-.dark .glass{background:rgba(234,240,244,.12);border-color:rgba(234,240,244,.3)}
+.dark .glass{background:rgba(var(--prgb),.12);border-color:rgba(var(--prgb),.3)}
 
-/* Soft colored blobs that float behind the glass */
+/* Soft colored blobs floating behind the glass */
 .blobs{position:fixed;inset:0;z-index:-1;overflow:hidden}
-.blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.6;animation:float 24s var(--ease) infinite alternate}
-.b1{width:460px;height:460px;background:var(--tsunami);top:-80px;left:-100px}
-.b2{width:540px;height:540px;background:var(--weather);top:30%;right:-180px;animation-duration:30s}
-.b3{width:400px;height:400px;background:var(--oxide);bottom:-100px;left:25%;opacity:.45;animation-duration:36s}
+.blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.6;animation:float 24s var(--ease) infinite alternate;transition:background-color .5s}
+.b1{width:460px;height:460px;background:var(--c2);top:-80px;left:-100px}
+.b2{width:540px;height:540px;background:var(--c3);top:30%;right:-180px;animation-duration:30s}
+.b3{width:400px;height:400px;background:var(--c5);bottom:-100px;left:25%;opacity:.4;animation-duration:36s}
 @keyframes float{to{transform:translate(140px,100px)}}
 
 /* ---------- 4. BUTTONS ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;border:1px solid transparent;font:600 16px "Manrope",sans-serif;cursor:pointer;text-decoration:none;background:var(--oxide);color:var(--paper);transition:transform .3s var(--ease),background .3s}
-.btn:hover{transform:translateY(-2px);background:var(--volcanic)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;border:1px solid transparent;font:600 16px "Manrope",sans-serif;cursor:pointer;text-decoration:none;background:var(--ink);color:var(--paper);transition:transform .3s var(--ease),background .3s}
+.btn:hover{transform:translateY(-2px);background:var(--c4)}
 .btn:active{transform:scale(.98)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn.ghost{background:transparent;color:inherit;border-color:currentColor}
-.btn.ghost:hover{background:rgba(234,240,244,.2)}
-.dark .btn{background:var(--paper);color:var(--oxide)}
+.btn.ghost:hover{background:rgba(var(--prgb),.2)}
+.dark .btn{background:var(--paper);color:var(--ink)}
 .dark .btn:hover{background:#fff}
 .dark .btn.ghost{background:transparent;color:var(--paper)}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 
 /* ---------- 5. TOP MENU ---------- */
-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:20px;align-items:center;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(177,199,212,.88)}
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:20px;align-items:center;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(var(--c1rgb),.88);white-space:nowrap}
 nav b{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.08em}
 nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 @media(max-width:700px){nav .link{display:none}}
@@ -82,22 +85,22 @@ nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 .hero{min-height:100vh;padding-top:120px;display:grid;gap:32px;align-items:center}
 @media(min-width:900px){.hero{grid-template-columns:1fr 1fr;gap:64px}}
 .hero p{max-width:520px;margin:20px 0 24px}
-.pill{display:inline-block;background:var(--oxide);color:var(--paper);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
+.pill{display:inline-block;background:var(--ink);color:var(--paper);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
 
 /* The model stands inside a colored arch */
 .stage{position:relative;max-width:420px;width:100%;margin:0 auto;aspect-ratio:4/5}
 .arch{position:absolute;bottom:0;border-radius:999px 999px 24px 24px}
 .arch.back1{left:0;width:48%;height:74%}
 .arch.back2{right:0;width:44%;height:62%}
-.arch.main{left:15%;width:70%;height:92%;background:var(--oxide);transition:background .7s var(--ease)}
+.arch.main{left:15%;width:70%;height:92%;background:var(--c5);transition:background .7s var(--ease)}
 .stage img{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:76%}
 
 /* Moving scan line over the arch */
 .scan{position:absolute;left:15%;width:70%;height:92%;bottom:0;overflow:hidden;border-radius:999px 999px 24px 24px;pointer-events:none}
-.scan i{position:absolute;inset:0;background:rgba(234,240,244,.15);border-bottom:2px solid var(--paper);animation:scan 4s var(--ease) infinite}
+.scan i{position:absolute;inset:0;background:rgba(var(--prgb),.15);border-bottom:2px solid var(--paper);animation:scan 4s var(--ease) infinite}
 @keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(0)}}
 
-/* Floating labels that explain the art */
+/* Floating labels around the model */
 .tag{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;font-size:12px;font-weight:600;animation:bob 5s var(--ease) infinite alternate}
 .tag svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .tag.t1{top:6%;left:-4%}
@@ -106,7 +109,7 @@ nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 @keyframes bob{to{transform:translateY(-10px)}}
 @media(max-width:520px){.tag.t1{left:0}.tag.t2{right:0}.tag.t3{left:0}}
 
-/* Five color tiles (click to change the arch color) */
+/* Five color tiles (click one to change the arch color) */
 .tiles{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .tile{height:80px;border-radius:16px;border:1px solid rgba(255,255,255,.55);cursor:pointer;font:400 18px var(--serif);padding:8px;display:flex;align-items:flex-end;text-align:left;transition:transform .4s var(--ease)}
 .tile:hover{transform:translateY(-4px)}
@@ -123,12 +126,12 @@ nav a.link{text-decoration:none;font-weight:600;font-size:14px}
 @media(min-width:900px){.tryon{grid-template-columns:1fr 1fr;gap:48px}}
 .left{display:flex;flex-direction:column;gap:16px}
 .slot{display:flex;gap:16px;padding:20px;border-radius:24px}
-.thumb{flex:none;width:96px;height:128px;border-radius:16px;border:1px dashed rgba(234,240,244,.6);display:grid;place-items:center;overflow:hidden;font-size:12px}
+.thumb{flex:none;width:96px;height:128px;border-radius:16px;border:1px dashed rgba(var(--prgb),.6);display:grid;place-items:center;overflow:hidden;font-size:12px}
 .thumb img{width:100%;height:100%;object-fit:cover}
 .slot .row{margin:8px 0}
 .msg{font-size:14px;min-height:20px}
 .result{padding:16px;border-radius:24px;display:flex;flex-direction:column;gap:16px}
-.canvaswrap{border-radius:16px;overflow:hidden;background:rgba(234,240,244,.1);min-height:300px;display:grid;place-items:center;text-align:center}
+.canvaswrap{border-radius:16px;overflow:hidden;background:rgba(var(--prgb),.1);min-height:300px;display:grid;place-items:center;text-align:center}
 canvas{width:100%;height:auto;display:none}
 .sliders label{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:14px;margin-bottom:6px}
 .check{display:flex;gap:8px;font-size:14px}
@@ -139,11 +142,23 @@ input[type=range]{width:100%;accent-color:var(--paper)}
 @media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
 .card{padding:24px;border-radius:24px}
 .card h3{margin-bottom:8px}
-.art{width:100%;height:96px;border-radius:16px;display:grid;place-items:center;margin-bottom:16px;background:rgba(234,240,244,.25);border:1px solid rgba(255,255,255,.4)}
-.dark .art{background:rgba(234,240,244,.1);border-color:rgba(234,240,244,.25)}
+.art{width:100%;height:96px;border-radius:16px;display:grid;place-items:center;margin-bottom:16px;background:rgba(var(--prgb),.25);border:1px solid rgba(255,255,255,.4)}
+.dark .art{background:rgba(var(--prgb),.1);border-color:rgba(var(--prgb),.25)}
 .art svg{width:120px;height:80px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;animation:bob 4s var(--ease) infinite alternate}
 
-footer{padding:32px 0;font-size:14px}
+footer{padding:32px 0 88px;font-size:14px}
+
+/* ---------- 10. THEME SWITCHER (bottom right) ---------- */
+.themes{position:fixed;right:16px;bottom:16px;z-index:20;display:flex;gap:4px;padding:6px;border-radius:999px;background:rgba(var(--c1rgb),.9);align-items:center}
+.themes span{font-size:12px;font-weight:600;padding:0 8px}
+.themes button{display:flex;align-items:center;gap:8px;border:1px solid transparent;background:transparent;color:var(--ink);font:600 12px "Manrope",sans-serif;padding:6px 10px;border-radius:999px;cursor:pointer;transition:background .3s}
+.themes button:hover{background:rgba(var(--irgb),.1)}
+.themes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.themes i{display:flex}
+.themes i b{width:10px;height:10px;border-radius:50%;margin-left:-3px;border:1px solid rgba(255,255,255,.7)}
+.themes i b:first-child{margin-left:0}
+@media(max-width:600px){.themes span,.themes em{display:none}}
+.themes em{font-style:normal}
 
 /* Fade in when scrolling */
 .fade{opacity:0;transform:translateY(32px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
@@ -183,9 +198,8 @@ footer{padding:32px 0;font-size:14px}
       <img src="model.png" alt="Model wearing a cream shirt and wide leg trousers">
       <div class="scan"><i></i></div>
 
-      <!-- floating labels -->
-      <div class="tag t1 glass"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M7.5 17c.7-3 2.5-4 4.5-4s3.800 1 4.500 4"/></svg>Your photo</div>
-      <div class="tag t2 glass"><svg viewBox="0 0 24 24"><path d="M7 5l5-2 5 2 4 5-3.500 1.500V21H6.500v-9.500L3 10z"/></svg>Clothing photo</div>
+      <div class="tag t1 glass"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M7.5 17c.7-3 2.5-4 4.5-4s3.8 1 4.5 4"/></svg>Your photo</div>
+      <div class="tag t2 glass"><svg viewBox="0 0 24 24"><path d="M7 5l5-2 5 2 4 5-3.5 1.5V21H6.5v-9.5L3 10z"/></svg>Clothing photo</div>
       <div class="tag t3 glass"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg>Try on preview</div>
     </div>
 
@@ -194,12 +208,12 @@ footer{padding:32px 0;font-size:14px}
 </div>
 
 <!-- TAGLINE -->
-<section class="tagline oxide dark">
+<section class="tagline band bg5">
   <div class="wrap"><h2 id="tag">Clothes should be judged on you, not on a model in a catalog photo.</h2></div>
 </section>
 
 <!-- TRY ON -->
-<section id="tryon" class="volcanic dark">
+<section id="tryon" class="band bg4">
   <div class="wrap">
     <h2>Try on an outfit in three steps</h2>
     <p class="muted" style="margin:12px 0 40px">Add your photo, add the clothing, and get a preview you can save.</p>
@@ -267,7 +281,7 @@ footer{padding:32px 0;font-size:14px}
 </section>
 
 <!-- BENEFITS -->
-<section id="benefits" class="tsunami">
+<section id="benefits" class="band bg2">
   <div class="wrap">
     <h2>Know how it looks before you buy</h2>
     <div class="grid">
@@ -292,7 +306,7 @@ footer{padding:32px 0;font-size:14px}
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how" class="weather">
+<section id="how" class="band bg3">
   <div class="wrap">
     <h2>How VIRTUFIT works</h2>
     <div class="grid">
@@ -343,30 +357,84 @@ footer{padding:32px 0;font-size:14px}
 
 <footer class="wrap"><p class="muted">VIRTUFIT. AI virtual clothing try on.</p></footer>
 
+<!-- THEME SWITCHER -->
+<div class="themes glass" id="themes" role="group" aria-label="Color theme"><span>Theme</span></div>
+
 
 <script>
-/* ============ A. HERO COLOR TILES ============ */
-// name, color, text color on the tile
-var colors=[
-  ["Cloudy Valley","#B1C7D4","#5E1C23"],
-  ["Tsunami","#849AAD","#5E1C23"],
-  ["Weather Board","#A1947F","#5E1C23"],
-  ["Volcanic Island","#605246","#EAF0F4"],
-  ["Red Oxide","#5E1C23","#EAF0F4"]
-];
-var tiles=document.getElementById("tiles"), arch=document.getElementById("arch");
-colors.forEach(function(c,i){
-  var b=document.createElement("button");
-  b.className="tile"; b.style.background=c[1]; b.style.color=c[2];
-  b.innerHTML="<span>"+c[0]+"</span>"; b.setAttribute("aria-label",c[0]);
-  b.onclick=function(){ clearInterval(timer); setColor(i); };
-  tiles.appendChild(b);
-});
-function setColor(i){ arch.style.background=colors[(i+3)%5][1]; }   // arch color changes
-var n=1, timer=setInterval(function(){ n=(n+1)%5; setColor(n); },3500); // auto change
-setColor(1);
+/* ============ A. THEMES (add your own colors here) ============
+   c = five colors from lightest to darkest
+   ink = text color on light areas, paper = text color on dark areas */
+var themes={
+  forest:{label:"Forest",
+    names:["Linen","Sage","Moss","Forest","Deep green"],
+    c:["#EFE8DA","#B7C4AA","#8C9E7E","#3F5646","#243A2E"], ink:"#243A2E", paper:"#EFE8DA"},
+  cloudy:{label:"Cloudy",
+    names:["Cloudy Valley","Tsunami","Weather Board","Volcanic Island","Red Oxide"],
+    c:["#B1C7D4","#849AAD","#A1947F","#605246","#5E1C23"], ink:"#5E1C23", paper:"#EAF0F4"},
+  autumn:{label:"Autumn",
+    names:["Golden Batter","Olive Harvest","Toasted Caramel","Spiced Wine","Cowhide Cocoa"],
+    c:["#E8D1A7","#9D9167","#84592B","#743014","#442D1C"], ink:"#442D1C", paper:"#E8D1A7"}
+};
+var T=themes.forest, themeKey="forest";
 
-/* ============ B. TAGLINE WORDS LIGHT UP ============ */
+// Helpers: hex to "r,g,b" and brightness
+function rgb(h){h=h.replace("#","");return parseInt(h.slice(0,2),16)+","+parseInt(h.slice(2,4),16)+","+parseInt(h.slice(4,6),16)}
+function lum(h){var p=rgb(h).split(",");return (.299*p[0]+.587*p[1]+.114*p[2])/255}
+
+/* ============ B. HERO COLOR TILES ============ */
+var tiles=document.getElementById("tiles"), arch=document.getElementById("arch");
+var n=1, timer=null;
+function setArch(i){ arch.style.background=T.c[(i+3)%5]; }
+function buildTiles(){
+  tiles.innerHTML="";
+  T.c.forEach(function(color,i){
+    var b=document.createElement("button");
+    b.className="tile"; b.style.background=color;
+    b.style.color= lum(color)<.45 ? T.paper : T.ink;
+    b.innerHTML="<span>"+T.names[i]+"</span>"; b.setAttribute("aria-label",T.names[i]);
+    b.onclick=function(){ clearInterval(timer); setArch(i); };
+    tiles.appendChild(b);
+  });
+  clearInterval(timer); n=1; setArch(n);
+  timer=setInterval(function(){ n=(n+1)%5; setArch(n); },3500);
+}
+
+/* ============ C. APPLY A THEME ============ */
+function applyTheme(key){
+  themeKey=key; T=themes[key];
+  var r=document.documentElement.style;
+  T.c.forEach(function(h,i){ r.setProperty("--c"+(i+1),h); });
+  r.setProperty("--ink",T.ink);
+  r.setProperty("--paper",T.paper);
+  r.setProperty("--prgb",rgb(T.paper));
+  r.setProperty("--irgb",rgb(T.ink));
+  r.setProperty("--c1rgb",rgb(T.c[0]));
+  // dark sections get light text
+  document.querySelectorAll(".band").forEach(function(el){
+    var num=+(el.className.match(/bg(\d)/)||[0,1])[1];
+    el.classList.toggle("dark", lum(T.c[num-1])<.45);
+  });
+  buildTiles();
+  document.querySelectorAll("#themes button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.key===key); });
+  try{ localStorage.setItem("virtufit-theme",key); }catch(e){}
+}
+
+// Build the theme buttons
+var box=document.getElementById("themes");
+Object.keys(themes).forEach(function(key){
+  var t=themes[key], b=document.createElement("button");
+  b.type="button"; b.dataset.key=key; b.setAttribute("aria-label","Use the "+t.label+" theme");
+  var dots=t.c.slice(0,5).map(function(c){return '<b style="background:'+c+'"></b>'}).join("");
+  b.innerHTML="<i>"+dots+"</i><em>"+t.label+"</em>";
+  b.onclick=function(){ applyTheme(key); };
+  box.appendChild(b);
+});
+
+var saved=null; try{ saved=localStorage.getItem("virtufit-theme"); }catch(e){}
+applyTheme(themes[saved]?saved:"forest");
+
+/* ============ D. TAGLINE WORDS LIGHT UP ============ */
 var tag=document.getElementById("tag");
 tag.innerHTML=tag.textContent.split(" ").map(function(w){return '<span class="word">'+w+'</span>'}).join(" ");
 var wordObs=new IntersectionObserver(function(list){
@@ -374,13 +442,13 @@ var wordObs=new IntersectionObserver(function(list){
 },{rootMargin:"0px 0px -40% 0px"});
 document.querySelectorAll(".word").forEach(function(w){ wordObs.observe(w); });
 
-/* ============ C. FADE IN CARDS ============ */
+/* ============ E. FADE IN CARDS ============ */
 var fadeObs=new IntersectionObserver(function(list){
   list.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("on"); fadeObs.unobserve(e.target);} });
 },{threshold:.15});
 document.querySelectorAll(".fade").forEach(function(f){ fadeObs.observe(f); });
 
-/* ============ D. TRY ON ============ */
+/* ============ F. TRY ON ============ */
 var userPhoto=null, clothPhoto=null;   // the two images (as canvases)
 var ready=false;                       // true after a result is drawn
 
@@ -459,20 +527,20 @@ function setupSlot(slot,which){
       var m=new Image();
       m.onload=function(){
         c.width=560; c.height=840;
-        x.fillStyle="#B1C7D4"; x.fillRect(0,0,560,840);
+        x.fillStyle=T.c[0]; x.fillRect(0,0,560,840);
         x.drawImage(m,0,0,560,840);
         userPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample photo loaded.";
         resetResult(); refresh();
       };
       m.src="model.png";
     } else {
-      // sample clothing = a striped shirt drawn on white
+      // sample clothing = a striped shirt (uses the theme colors) on white
       c.width=c.height=400;
       x.fillStyle="#fff"; x.fillRect(0,0,400,400);
       var shirt=new Path2D("M110 70L160 50Q200 80 240 50L290 70L350 140L305 170L280 140L280 340L120 340L120 140L95 170L50 140Z");
-      x.fillStyle="#5E1C23"; x.fill(shirt);
+      x.fillStyle=T.c[4]; x.fill(shirt);
       x.save(); x.clip(shirt);
-      x.fillStyle="rgba(177,199,212,.9)";
+      x.fillStyle=T.c[1];
       for(var i=0;i<400;i+=28) x.fillRect(i,0,6,400);
       x.restore();
       clothPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample clothing loaded.";
@@ -483,8 +551,8 @@ function setupSlot(slot,which){
 setupSlot(slotUser,"user");
 setupSlot(slotCloth,"cloth");
 
-// Remove the plain background of the clothing photo
-// It starts at the edges and removes every pixel that looks like the corner color
+// Remove the plain background of the clothing photo.
+// It starts at the edges and removes every pixel that looks like the corner color.
 function removeBackground(src){
   var w=src.width, h=src.height;
   var c=document.createElement("canvas"); c.width=w; c.height=h;
@@ -511,7 +579,7 @@ function removeBackground(src){
     if(Y<h-1) stack.push(i+w);
   }
 
-  // make background transparent and find the garment box
+  // make the background see through and find the garment box
   var x0=w, y0=h, x1=0, y1=0;
   for(Y=0;Y<h;Y++){
     for(X=0;X<w;X++){
@@ -594,8 +662,7 @@ document.getElementById("startover").onclick=function(){
   userPhoto=null; clothPhoto=null;
   clearThumb(slotUser); clearThumb(slotCloth);
   size.value=100; movex.value=0; movey.value=0;
-  resetResult(); 
-  refresh();
+  resetResult(); refresh();
 };
 
 refresh();
