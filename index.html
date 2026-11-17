@@ -573,18 +573,6 @@ document.getElementById("startover").onclick=function(){
   size.value=100; movex.value=0; movey.value=0;
   resetResult(); refresh();
 };
-
-refresh();
-
-/* ============ E. WAITLIST FORM ============ */
-var form=document.getElementById("form"), email=document.getElementById("email"), fmsg=document.getElementById("formmsg");
-form.onsubmit=function(e){
-  e.preventDefault();
-  var v=email.value.trim();
-  if(!v){ fmsg.textContent="Enter your email address."; return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){ fmsg.textContent="That email looks incomplete. Check it and try again."; return; }
-  fmsg.textContent="Added to the waitlist: "+v;
-  form.reset();
 };
 </script>
 </body>
