@@ -1,1 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIRTUFIT | AI virtual clothing try on</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<style>
+/* ---------- 1. YOUR COLORS ---------- */
+:root{
+  --batter:#E8D1A7;   /* Golden Batter */
+  --olive:#9D9167;    /* Olive Harvest */
+  --caramel:#84592B;  /* Toasted Caramel */
+  --wine:#743014;     /* Spiced Wine */
+  --cocoa:#442D1C;    /* Cowhide Cocoa */
+  --serif:"Instrument Serif",Georgia,serif;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+
+/* ---------- 2. BASIC PAGE ---------- */
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--batter);color:var(--cocoa);font-family:"Manrope",sans-serif;font-size:16px;line-height:24px;overflow-x:hidden}
+h1,h2,h3{font-family:var(--serif);font-weight:400}
+h1{font-size:clamp(44px,7vw,64px);line-height:1}
+h2{font-size:clamp(34px,5vw,44px);line-height:1.1}
+h3{font-family:"Manrope",sans-serif;font-weight:600;font-size:18px}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+section{padding:88px 0}
+.muted{opacity:.8}
+
+/* Color bands: each section uses one of your colors */
+.olive{background:var(--olive)}
+.caramel{background:var(--caramel)}
+.wine{background:var(--wine)}
+.cocoa{background:var(--cocoa)}
+.dark{color:var(--batter)}
+
+/* ---------- 3. GLASS (Apple style, see through) ---------- */
+.glass{
+  background:rgba(232,209,167,.35);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 32px rgba(68,45,28,.15);
+}
+.dark .glass{background:rgba(232,209,167,.12);border-color:rgba(232,209,167,.3)}
+
+/* Soft colored blobs that float behind the glass */
+.blobs{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.6;animation:float 24s var(--ease) infinite alternate}
+.b1{width:460px;height:460px;background:var(--olive);top:-80px;left:-100px}
+.b2{width:540px;height:540px;background:var(--caramel);top:30%;right:-180px;animation-duration:30s}
+.b3{width:400px;height:400px;background:var(--wine);bottom:-100px;left:25%;animation-duration:36s}
+@keyframes float{to{transform:translate(140px,100px)}}
+
+/* ---------- 4. BUTTONS ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:12px;border:1px solid transparent;font:600 16px "Manrope",sans-serif;cursor:pointer;text-decoration:none;background:var(--wine);color:var(--batter);transition:transform .3s var(--ease),background .3s}
+.btn:hover{transform:translateY(-2px);background:var(--cocoa)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.dark .btn{background:var(--batter);color:var(--cocoa)}
+.dark .btn.ghost{background:transparent;color:var(--batter)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* ---------- 5. TOP MENU ---------- */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:20px;align-items:center;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(232,209,167,.85)}
+nav b{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.08em}
+nav a.link{text-decoration:none;font-weight:600;font-size:14px}
+@media(max-width:700px){nav .link{display:none}}
+
+/* ---------- 6. HERO (first screen) ---------- */
+.hero{min-height:100vh;padding-top:120px;display:grid;gap:32px;align-items:center}
+@media(min-width:900px){.hero{grid-template-columns:1fr 1fr;gap:64px}}
+.hero p{max-width:520px;margin:20px 0 24px}
+.pill{display:inline-block;background:var(--wine);color:var(--batter);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
+
+/* The model stands inside a colored arch */
+.stage{position:relative;max-width:420px;width:100%;margin:0 auto;aspect-ratio:4/5}
+.arch{position:absolute;bottom:0;border-radius:999px 999px 24px 24px}
+.arch.back1{left:0;width:48%;height:74%}
+.arch.back2{right:0;width:44%;height:62%}
+.arch.main{left:15%;width:70%;height:92%;background:var(--wine);transition:background .7s var(--ease)}
+.stage img{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:76%}
+
+/* Moving scan line over the arch */
+.scan{position:absolute;left:15%;width:70%;height:92%;bottom:0;overflow:hidden;border-radius:999px 999px 24px 24px;pointer-events:none}
+.scan i{position:absolute;inset:0;background:rgba(232,209,167,.15);border-bottom:2px solid var(--batter);animation:scan 4s var(--ease) infinite}
+@keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+
+/* Five color tiles (click to change the arch color) */
+.tiles{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tile{height:80px;border-radius:16px;border:1px solid rgba(255,255,255,.5);cursor:pointer;font:400 18px var(--serif);padding:8px;display:flex;align-items:flex-end;transition:transform .4s var(--ease)}
+.tile:hover{transform:translateY(-4px)}
+@media(max-width:700px){.tile span{display:none}}
+
+/* ---------- 7. TAGLINE (words light up as you scroll) ---------- */
+.tagline{min-height:70vh;display:flex;align-items:center}
+.tagline h2{max-width:720px}
+.word{opacity:.3;transition:opacity .5s}
+.word.on{opacity:1}
+
+/* ---------- 8. TRY-ON SECTION ---------- */
+.tryon{display:grid;gap:32px;align-items:start}
+@media(min-width:900px){.tryon{grid-template-columns:1fr 1fr;gap:48px}}
+.left{display:flex;flex-direction:column;gap:16px}
+.slot{display:flex;gap:16px;padding:20px;border-radius:24px}
+.thumb{flex:none;width:96px;height:128px;border-radius:16px;border:1px dashed rgba(232,209,167,.6);display:grid;place-items:center;overflow:hidden;font-size:12px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.slot .row{margin:8px 0}
+.msg{font-size:14px;min-height:20px}
+.result{padding:16px;border-radius:24px;display:flex;flex-direction:column;gap:16px}
+.canvaswrap{border-radius:16px;overflow:hidden;background:rgba(232,209,167,.1);min-height:300px;display:grid;place-items:center;text-align:center}
+canvas{width:100%;height:auto;display:none}
+.sliders label{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:14px;margin-bottom:6px}
+.check{display:flex;gap:8px;font-size:14px}
+input[type=range]{width:100%;accent-color:var(--batter)}
+
+/* ---------- 9. CARDS ---------- */
+.grid{display:grid;gap:16px;margin-top:40px}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
+.card{padding:24px;border-radius:24px}
+.card h3{margin-bottom:8px}
+
+/* ---------- 10. QUESTIONS ---------- */
+details{padding:16px 24px;border-radius:16px;margin-bottom:12px}
+summary{cursor:pointer;font-weight:600}
+details p{margin-top:8px}
+
+/* ---------- 11. WAITLIST ---------- */
+form{display:flex;flex-wrap:wrap;gap:8px;max-width:440px;margin-top:24px}
+input[type=email]{flex:1;min-width:200px;padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.6);font:16px "Manrope",sans-serif}
+footer{padding:32px 0;font-size:14px}
+
+/* Fade in when scrolling */
+.fade{opacity:0;transform:translateY(32px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.fade.on{opacity:1;transform:none}
+
+/* Respect people who turn off animations */
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.fade{opacity:1;transform:none}.word{opacity:1}}
+</style>
+</head>
+
+<body>
+<div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<!-- MENU -->
+<nav class="glass">
+  <b>VIRTUFIT</b>
+  <a class="link" href="#tryon">Try it on</a>
+  <a class="link" href="#benefits">Benefits</a>
+  <a class="link" href="#how">How it works</a>
+  <a class="link" href="#faq">FAQ</a>
+  <a class="btn" href="#waitlist" style="padding:8px 14px;font-size:14px">Join the waitlist</a>
+</nav>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <span class="pill">AI virtual try on</span>
+      <h1>See the outfit on you, before you buy it</h1>
+      <p class="muted">VIRTUFIT is an AI virtual try on. Upload your photo and a photo of the clothing, and see the outfit projected onto you.</p>
+      <a class="btn" href="#tryon">Try it on</a>
+    </div>
+
+    <div class="stage">
+      <div class="arch back1 glass"></div>
+      <div class="arch back2 glass"></div>
+      <div class="arch main" id="arch"></div>
+      <img src="model.png" alt="Model wearing a cream shirt and wide leg trousers">
+      <div class="scan"><i></i></div>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+  </section>
+</div>
+
+<!-- TAGLINE -->
+<section class="tagline cocoa dark">
+  <div class="wrap"><h2 id="tag">Clothes should be judged on you, not on a model in a catalog photo.</h2></div>
+</section>
+
+<!-- TRY ON -->
+<section id="tryon" class="wine dark">
+  <div class="wrap">
+    <h2>Try on an outfit in three steps</h2>
+    <p class="muted" style="margin:12px 0 40px">Add your photo, add the clothing, and get a preview you can save.</p>
+
+    <div class="tryon">
+      <!-- LEFT SIDE: uploads -->
+      <div class="left">
+        <div class="slot glass" id="slotUser">
+          <div class="thumb"><span>No photo</span></div>
+          <div>
+            <h3>1. Your photo</h3>
+            <p class="muted" style="font-size:14px">A clear photo of you in good light.</p>
+            <div class="row">
+              <button class="btn" type="button" data-pick>Choose photo</button>
+              <button class="btn ghost" type="button" data-sample>Use sample</button>
+            </div>
+            <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            <p class="msg"></p>
+          </div>
+        </div>
+
+        <div class="slot glass" id="slotCloth">
+          <div class="thumb"><span>No photo</span></div>
+          <div>
+            <h3>2. Clothing photo</h3>
+            <p class="muted" style="font-size:14px">A flat photo on a plain background works best.</p>
+            <div class="row">
+              <button class="btn" type="button" data-pick>Choose photo</button>
+              <button class="btn ghost" type="button" data-sample>Use sample</button>
+            </div>
+            <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            <p class="msg"></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="gen" disabled>3. Generate try on</button>
+          <button class="btn ghost" id="startover">Start over</button>
+        </div>
+        <p class="msg" id="status">Add both photos to continue.</p>
+      </div>
+
+      <!-- RIGHT SIDE: result -->
+      <div class="result glass">
+        <div class="canvaswrap">
+          <canvas id="out" width="600" height="800"></canvas>
+          <p id="empty" style="padding:24px">Your try on preview appears here</p>
+        </div>
+
+        <div class="sliders" id="tune" hidden>
+          <label>Size <input type="range" id="size" min="50" max="150" value="100"></label>
+          <label>Left and right <input type="range" id="movex" min="-25" max="25" value="0"></label>
+          <label>Up and down <input type="range" id="movey" min="-25" max="25" value="0"></label>
+          <label class="check"><input type="checkbox" id="rmbg" checked> Remove clothing photo background</label>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="download" disabled>Download image</button>
+          <button class="btn ghost" id="another" disabled>Try different clothing</button>
+        </div>
+        <p class="muted" style="font-size:14px">This preview places the clothing as a flat layer on your photo. Folds and lighting are not simulated yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits" class="olive">
+  <div class="wrap">
+    <h2>Know how it looks before you buy</h2>
+    <div class="grid">
+      <div class="card glass fade"><h3>See clothes on your own photo</h3><p>Skip the catalog model. The outfit is placed on a photo of you.</p></div>
+      <div class="card glass fade"><h3>A clear preview</h3><p>Check color, cut and proportions before you spend anything.</p></div>
+      <div class="card glass fade"><h3>Try as many outfits as you like</h3><p>Swap the clothing photo and make a new preview.</p></div>
+      <div class="card glass fade"><h3>Privacy first</h3><p>Your photos stay on your device. Nothing is uploaded.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="caramel dark">
+  <div class="wrap">
+    <h2>How VIRTUFIT works</h2>
+    <div class="grid">
+      <div class="card glass fade"><h3>1. Upload your photo</h3><p>Choose a clear photo of yourself.</p></div>
+      <div class="card glass fade"><h3>2. Upload the clothing</h3><p>Add a photo of the outfit you want to try.</p></div>
+      <div class="card glass fade"><h3>3. Generate the projection</h3><p>The clothing is fitted onto your photo.</p></div>
+      <div class="card glass fade"><h3>4. View and save</h3><p>Adjust the fit, then download the image.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S NEXT -->
+<section id="next">
+  <div class="wrap">
+    <h2>What is coming next</h2>
+    <div class="grid">
+      <div class="card glass fade"><h3>Outfit recommendations</h3><p>Suggestions tuned to your style.</p></div>
+      <div class="card glass fade"><h3>Multiple combinations</h3><p>Try a top, trousers and jacket together.</p></div>
+      <div class="card glass fade"><h3>Automatic clothing detection</h3><p>VIRTUFIT finds the garment on its own.</p></div>
+      <div class="card glass fade"><h3>Styling suggestions</h3><p>Ideas for what to pair with your choice.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS -->
+<section id="faq" class="olive">
+  <div class="wrap" style="max-width:760px">
+    <h2 style="margin-bottom:32px">Questions people ask first</h2>
+    <details class="glass"><summary>How does the try on work?</summary><p>You upload your photo and a clothing photo. VIRTUFIT places the clothing on your photo and shows a preview.</p></details>
+    <details class="glass"><summary>Is this a full AI try on?</summary><p>Not yet. This version overlays the clothing flat. A full AI model can be connected later.</p></details>
+    <details class="glass"><summary>Are my photos stored?</summary><p>No. Everything happens in your browser and nothing is uploaded.</p></details>
+    <details class="glass"><summary>Can I save the result?</summary><p>Yes. Press Download image after you generate a preview.</p></details>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section id="waitlist" class="cocoa dark">
+  <div class="wrap" style="text-align:center">
+    <h2>Be first to try it on</h2>
+    <p class="muted" style="margin-top:12px">Join the waitlist. It is free and you can leave any time.</p>
+    <form id="form" style="margin:24px auto 0" novalidate>
+      <input type="email" id="email" placeholder="you@example.com" aria-label="Email address">
+      <button class="btn" type="submit">Join the waitlist</button>
+      <p class="msg" id="formmsg" style="width:100%;text-align:left"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="wrap"><p class="muted">VIRTUFIT. AI virtual clothing try on.</p></footer>
+
+
+<script>
+/* ============ A. HERO COLOR TILES ============ */
+// Each color: name, hex, text color
+var colors=[
+  ["Golden batter","#E8D1A7","#442D1C"],
+  ["Olive harvest","#9D9167","#442D1C"],
+  ["Toasted caramel","#84592B","#E8D1A7"],
+  ["Spiced wine","#743014","#E8D1A7"],
+  ["Cowhide cocoa","#442D1C","#E8D1A7"]
+];
+var tiles=document.getElementById("tiles"), arch=document.getElementById("arch");
+colors.forEach(function(c,i){
+  var b=document.createElement("button");
+  b.className="tile"; b.style.background=c[1]; b.style.color=c[2];
+  b.innerHTML="<span>"+c[0]+"</span>"; b.setAttribute("aria-label",c[0]);
+  b.onclick=function(){ clearInterval(timer); setColor(i); };
+  tiles.appendChild(b);
+});
+function setColor(i){ arch.style.background=colors[(i+2)%5][1]; }   // arch color changes
+var n=0, timer=setInterval(function(){ n=(n+1)%5; setColor(n); },3500); // auto change
+setColor(0);
+
+/* ============ B. TAGLINE WORDS LIGHT UP ============ */
+var tag=document.getElementById("tag");
+tag.innerHTML=tag.textContent.split(" ").map(function(w){return '<span class="word">'+w+'</span>'}).join(" ");
+var wordObs=new IntersectionObserver(function(list){
+  list.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("on"); wordObs.unobserve(e.target);} });
+},{rootMargin:"0px 0px -40% 0px"});
+document.querySelectorAll(".word").forEach(function(w){ wordObs.observe(w); });
+
+/* ============ C. FADE IN CARDS ============ */
+var fadeObs=new IntersectionObserver(function(list){
+  list.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("on"); fadeObs.unobserve(e.target);} });
+},{threshold:.15});
+document.querySelectorAll(".fade").forEach(function(f){ fadeObs.observe(f); });
+
+/* ============ D. TRY ON ============ */
+var userPhoto=null, clothPhoto=null;      // the two images (as canvases)
+var ready=false;                          // true after a result is drawn
+
+var out=document.getElementById("out"), ctx=out.getContext("2d");
+var gen=document.getElementById("gen"), statusEl=document.getElementById("status");
+var tune=document.getElementById("tune"), empty=document.getElementById("empty");
+var dl=document.getElementById("download"), another=document.getElementById("another");
+var size=document.getElementById("size"), movex=document.getElementById("movex"),
+    movey=document.getElementById("movey"), rmbg=document.getElementById("rmbg");
+
+// Make an image smaller so the page stays fast
+function shrink(img,w,h,max){
+  var k=Math.min(1,max/Math.max(w,h)), c=document.createElement("canvas");
+  c.width=Math.round(w*k); c.height=Math.round(h*k);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  return c;
+}
+
+// Get the parts of one upload box
+function getSlot(id){
+  var el=document.getElementById(id);
+  return {el:el, thumb:el.querySelector(".thumb"), msg:el.querySelector(".msg"), file:el.querySelector("input[type=file]")};
+}
+var slotUser=getSlot("slotUser"), slotCloth=getSlot("slotCloth");
+
+function showThumb(slot,canvas){
+  slot.thumb.innerHTML='<img alt="Preview" src="'+canvas.toDataURL("image/jpeg",.8)+'">';
+}
+function clearThumb(slot){ slot.thumb.innerHTML="<span>No photo</span>"; slot.msg.textContent=""; }
+
+// Turn the Generate button on or off
+function refresh(){
+  var ok=userPhoto && clothPhoto;
+  gen.disabled=!ok;
+  statusEl.textContent= ok ? "Ready. Press Generate try on."
+    : userPhoto ? "Add the clothing photo to continue."
+    : clothPhoto ? "Add your photo to continue." : "Add both photos to continue.";
+}
+
+function resetResult(){
+  ready=false; out.style.display="none"; empty.style.display="block";
+  tune.hidden=true; dl.disabled=true; another.disabled=true;
+}
+
+// Read a file the person chose
+function loadFile(slot,which,file){
+  if(!file) return;
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){ slot.msg.textContent="Please choose a JPG, PNG or WebP image."; return; }
+  if(file.size>10*1024*1024){ slot.msg.textContent="That photo is over 10 MB. Choose a smaller one."; return; }
+  var reader=new FileReader();
+  reader.onload=function(){
+    var img=new Image();
+    img.onload=function(){
+      var c=shrink(img,img.naturalWidth,img.naturalHeight, which==="user"?900:700);
+      if(which==="user") userPhoto=c; else clothPhoto=c;
+      showThumb(slot,c); slot.msg.textContent=file.name;
+      resetResult(); refresh();
+    };
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Hook up buttons for one upload box
+function setupSlot(slot,which){
+  slot.el.querySelector("[data-pick]").onclick=function(){ slot.file.click(); };
+  slot.file.onchange=function(){ loadFile(slot,which,slot.file.files[0]); slot.file.value=""; };
+  // drag and drop
+  slot.el.ondragover=function(e){ e.preventDefault(); };
+  slot.el.ondrop=function(e){ e.preventDefault(); loadFile(slot,which,e.dataTransfer.files[0]); };
+  // sample button
+  slot.el.querySelector("[data-sample]").onclick=function(){
+    var c=document.createElement("canvas"), x=c.getContext("2d");
+    if(which==="user"){
+      // sample person = the model photo
+      var m=new Image();
+      m.onload=function(){
+        c.width=560; c.height=840;
+        x.fillStyle="#E8D1A7"; x.fillRect(0,0,560,840);
+        x.drawImage(m,0,0,560,840);
+        userPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample photo loaded.";
+        resetResult(); refresh();
+      };
+      m.src="model.png";
+    } else {
+      // sample clothing = a striped shirt drawn on white
+      c.width=c.height=400;
+      x.fillStyle="#fff"; x.fillRect(0,0,400,400);
+      var shirt=new Path2D("M110 70L160 50Q200 80 240 50L290 70L350 140L305 170L280 140L280 340L120 340L120 140L95 170L50 140Z");
+      x.fillStyle="#743014"; x.fill(shirt);
+      x.save(); x.clip(shirt);
+      x.fillStyle="rgba(232,209,167,.9)";
+      for(var i=0;i<400;i+=28) x.fillRect(i,0,6,400);
+      x.restore();
+      clothPhoto=c; showThumb(slot,c); slot.msg.textContent="Sample clothing loaded.";
+      resetResult(); refresh();
+    }
+  };
+}
+setupSlot(slotUser,"user");
+setupSlot(slotCloth,"cloth");
+
+// Remove the plain background of the clothing photo
+// It starts at the edges and removes every pixel that looks like the corner color
+function removeBackground(src){
+  var w=src.width, h=src.height;
+  var c=document.createElement("canvas"); c.width=w; c.height=h;
+  var x=c.getContext("2d"); x.drawImage(src,0,0);
+  var data=x.getImageData(0,0,w,h), a=data.data;
+  var seen=new Uint8Array(w*h);
+
+  // corner color
+  var ref=[a[0],a[1],a[2]];
+  function similar(i){
+    return Math.abs(a[i*4]-ref[0])<=34 && Math.abs(a[i*4+1]-ref[1])<=34 && Math.abs(a[i*4+2]-ref[2])<=34;
+  }
+
+  // walk in from all four edges
+  var stack=[], i, X, Y;
+  for(X=0;X<w;X++){ stack.push(X, (h-1)*w+X); }
+  for(Y=0;Y<h;Y++){ stack.push(Y*w, Y*w+w-1); }
+  while(stack.length){
+    i=stack.pop();
+    if(seen[i] || !similar(i)) continue;
+    seen[i]=1;
+    X=i%w; Y=(i-X)/w;
+    if(X>0) stack.push(i-1);
+    if(X<w-1) stack.push(i+1);
+    if(Y>0) stack.push(i-w);
+    if(Y<h-1) stack.push(i+w);
+  }
+
+  // make background transparent and find the garment box
+  var x0=w, y0=h, x1=0, y1=0;
+  for(Y=0;Y<h;Y++){
+    for(X=0;X<w;X++){
+      i=Y*w+X;
+      if(seen[i]){ a[i*4+3]=0; }
+      else {
+        if(X<x0)x0=X; if(X>x1)x1=X; if(Y<y0)y0=Y; if(Y>y1)y1=Y;
+      }
+    }
+  }
+  x.putImageData(data,0,0);
+  if(x1<=x0 || y1<=y0) return {canvas:c, box:{x:0,y:0,w:w,h:h}};
+  return {canvas:c, box:{x:x0,y:y0,w:x1-x0,h:y1-y0}};
+}
+
+// Draw your photo, then put the clothing on top
+function drawResult(){
+  var W=userPhoto.width, H=userPhoto.height;
+  out.width=W; out.height=H;
+  ctx.clearRect(0,0,W,H);
+  ctx.drawImage(userPhoto,0,0);
+
+  // the clothing (with or without its background)
+  var src=clothPhoto, box={x:0,y:0,w:clothPhoto.width,h:clothPhoto.height};
+  if(rmbg.checked){ var r=removeBackground(clothPhoto); src=r.canvas; box=r.box; }
+
+  // the area on the body where clothes go (upper body)
+  var tall=H/W>1.3;
+  var area= tall ? {x:.25*W,y:.14*H,w:.5*W,h:.3*H} : {x:.2*W,y:.3*H,w:.6*W,h:.5*H};
+
+  // fit the clothing inside that area, then apply the sliders
+  var scale=Math.min(area.w/box.w, area.h/box.h)*(size.value/100);
+  var dw=box.w*scale, dh=box.h*scale;
+  var dx=area.x+(area.w-dw)/2+(movex.value/100)*W;
+  var dy=area.y+(area.h-dh)/3+(movey.value/100)*H;
+
+  ctx.save();
+  ctx.shadowColor="rgba(0,0,0,.28)"; ctx.shadowBlur=14; ctx.shadowOffsetY=4;
+  ctx.globalAlpha=.97;
+  ctx.drawImage(src,box.x,box.y,box.w,box.h,dx,dy,dw,dh);
+  ctx.restore();
+
+  out.style.display="block"; empty.style.display="none";
+  tune.hidden=false; dl.disabled=false; another.disabled=false; ready=true;
+}
+
+// Generate button
+gen.onclick=function(){
+  if(!userPhoto || !clothPhoto) return;
+  gen.disabled=true;
+  statusEl.textContent="Fitting the clothing to you...";
+  setTimeout(function(){
+    drawResult();
+    gen.disabled=false;
+    statusEl.textContent="Done. Download the image or try different clothing.";
+  },900);
+};
+
+// Sliders and checkbox redraw the result
+[size,movex,movey,rmbg].forEach(function(el){
+  el.oninput=function(){ if(ready) drawResult(); };
+});
+
+// Download the picture
+dl.onclick=function(){
+  if(!ready) return;
+  var a=document.createElement("a");
+  a.href=out.toDataURL("image/png");
+  a.download="virtufit-try-on.png";
+  a.click();
+};
+
+// Try different clothing (keeps your photo)
+another.onclick=function(){
+  clothPhoto=null; clearThumb(slotCloth); resetResult(); refresh();
+  slotCloth.el.scrollIntoView({behavior:"smooth",block:"center"});
+};
+
+// Start over
+document.getElementById("startover").onclick=function(){
+  userPhoto=null; clothPhoto=null;
+  clearThumb(slotUser); clearThumb(slotCloth);
+  size.value=100; movex.value=0; movey.value=0;
+  resetResult(); refresh();
+};
+
+refresh();
+
+/* ============ E. WAITLIST FORM ============ */
+var form=document.getElementById("form"), email=document.getElementById("email"), fmsg=document.getElementById("formmsg");
+form.onsubmit=function(e){
+  e.preventDefault();
+  var v=email.value.trim();
+  if(!v){ fmsg.textContent="Enter your email address."; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){ fmsg.textContent="That email looks incomplete. Check it and try again."; return; }
+  fmsg.textContent="Added to the waitlist: "+v;
+  form.reset();
+};
+</script>
+</body>
+</html>
